@@ -267,7 +267,6 @@ class App {
     if (!workoutEl) return; // Guard clause
 
     const workout = this.#workouts.find((w) => w.id === workoutEl.dataset.id);
-    // console.log(workout);
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
       animate: true,
       pan: {
@@ -282,7 +281,6 @@ class App {
 
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("workouts"));
-    // console.log(data);
 
     if (!data) return;
     this.#workouts = data;
