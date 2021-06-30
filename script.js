@@ -20,12 +20,7 @@ class App {
     form.addEventListener("submit", this._newWorkout.bind(this));
 
     // Toggle between running & cycling:
-    inputType.addEventListener("change", function () {
-      inputElevation
-        .closest(".form__row")
-        .classList.toggle("form__row--hidden");
-      inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
-    });
+    inputType.addEventListener("change", this._toggleElevationField);
   }
 
   _getPosition() {
@@ -62,7 +57,10 @@ class App {
     inputDistance.focus(); // focus on the distance element for better UX
   }
 
-  _toggleElevationField() {}
+  _toggleElevationField() {
+    inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
+    inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
+  }
 
   _newWorkout(e) {
     e.preventDefault();
@@ -90,7 +88,6 @@ class App {
       .openPopup();
   }
 }
-
 const app = new App();
 
 ////////////////////////////////////////////////////////////////
