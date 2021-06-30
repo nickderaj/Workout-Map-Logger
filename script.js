@@ -16,7 +16,7 @@ class Workout {
   id = (new Date() + "").slice(-10);
 
   constructor(coords, distance, duration) {
-    this.coords = coords;
+    this.coords = coords; // [lat,lng]
     this.distance = distance; // km
     this.duration = duration; // minutes
   }
@@ -26,12 +26,26 @@ class Running extends Workout {
   constructor(coords, distance, duration, cadence) {
     super(coords, distance, duration);
     this.cadence = cadence;
+    this.calcPace();
+  }
+
+  calcPace() {
+    // min / km
+    this.pace = this.duration / this.distance;
+    return this.pace;
   }
 }
 class Cycling extends Workout {
   constructor(coords, distance, duration, elevation) {
     super(coords, distance, duration);
     this.elevation = elevation;
+    this.calcSpeed();
+  }
+
+  calcSpeed() {
+    // min / km
+    this.pace = this.distance / (this.duration / 60);
+    return this.speed;
   }
 }
 
