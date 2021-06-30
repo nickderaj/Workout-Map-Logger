@@ -11,34 +11,39 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
-let map, mapEvent;
-
 class App {
-  constructor() {}
+  #map;
+  #mapEvent;
+
+  constructor() {
+    this._getPosition();
+  }
   _getPosition() {
     if (navigator.geolocation) {
       // Guard clause for old browsers
-      navigator.geolocation.getCurrentPosition(this._loadMap, function () {
-        alert("Could not get your position");
-      });
+      navigator.geolocation.getCurrentPosition(
+        this._loadMap.bind(this),
+        function () {
+          alert("Could not get your position");
+        }
+      );
     }
   }
   _loadMap(position) {
     const { latitude } = position.coords; // could write position.coords.latitude but this makes use of destructuring
     const { longitude } = position.coords;
-    console.log(`https://www.google.com.my/maps/@${latitude},${longitude}`);
     const coords = [latitude, longitude];
 
-    map = L.map("map").setView(coords, 15);
+    this.#map = L.map("map").setView(coords, 15);
 
     L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    }).addTo(map);
+    }).addTo(this.#map);
 
     // Handling clicks on map:
-    map.on("click", function (mapE) {
-      mapEvent = mapE;
+    this.#map.on("click", function (mapE) {
+      this.#mapEvent = mapE;
       form.classList.remove("hidden");
       inputDistance.focus(); // focus on the distance element for better UX
     });
