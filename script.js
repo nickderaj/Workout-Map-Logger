@@ -13,34 +13,42 @@ const inputElevation = document.querySelector(".form__input--elevation");
 
 let map, mapEvent;
 
-if (navigator.geolocation) {
-  // Guard clause for old browsers
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const { latitude } = position.coords; // could write position.coords.latitude but this makes use of destructuring
-      const { longitude } = position.coords;
-      console.log(`https://www.google.com.my/maps/@${latitude},${longitude}`);
-      const coords = [latitude, longitude];
-
-      map = L.map("map").setView(coords, 15);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
-
-      // Handling clicks on map:
-      map.on("click", function (mapE) {
-        mapEvent = mapE;
-        form.classList.remove("hidden");
-        inputDistance.focus(); // focus on the distance element for better UX
+class App {
+  constructor() {}
+  _getPosition() {
+    if (navigator.geolocation) {
+      // Guard clause for old browsers
+      navigator.geolocation.getCurrentPosition(this._loadMap, function () {
+        alert("Could not get your position");
       });
-    },
-    function () {
-      alert("Could not get your position");
     }
-  );
+  }
+  _loadMap(position) {
+    const { latitude } = position.coords; // could write position.coords.latitude but this makes use of destructuring
+    const { longitude } = position.coords;
+    console.log(`https://www.google.com.my/maps/@${latitude},${longitude}`);
+    const coords = [latitude, longitude];
+
+    map = L.map("map").setView(coords, 15);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // Handling clicks on map:
+    map.on("click", function (mapE) {
+      mapEvent = mapE;
+      form.classList.remove("hidden");
+      inputDistance.focus(); // focus on the distance element for better UX
+    });
+  }
+  _showForm() {}
+  _toggleElevationField() {}
+  _newWorkout() {}
 }
+
+const app = new App();
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
@@ -74,22 +82,6 @@ inputType.addEventListener("change", function () {
   inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
 });
 
-{
-  /* <div class="form__row">
-<label class="form__label">Cadence</label>
-<input
-  class="form__input form__input--cadence"
-  placeholder="step/min"
-/>
-</div>
-<div class="form__row form__row--hidden">
-<label class="form__label">Elev Gain</label>
-<input
-  class="form__input form__input--elevation"
-  placeholder="meters"
-/>
-</div> */
-}
 ////////////////////////////////////////////////////////////////
 
 // Planning:
