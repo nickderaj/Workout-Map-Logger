@@ -3,7 +3,6 @@
 class Workout {
   date = new Date();
   id = (Date.now() + "").slice(-10);
-  clicks = 0;
 
   constructor(coords, distance, duration) {
     this.coords = coords; // [lat,lng]
@@ -17,10 +16,6 @@ class Workout {
     this.description = `${this.type[0].toUpperCase()}${this.type.slice(1)} on ${
       months[this.date.getMonth()]
     } ${this.date.getDate()}`;
-  }
-
-  click() {
-    this.clicks++;
   }
 }
 
@@ -73,7 +68,13 @@ class App {
   #workouts = [];
 
   constructor() {
+    // Get users position
     this._getPosition();
+
+    // Get data from local storage
+    this._getLocalStorage();
+
+    // Attach event handlers
     form.addEventListener("submit", this._newWorkout.bind(this));
     inputType.addEventListener("change", this._toggleElevationField);
     containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
@@ -105,6 +106,10 @@ class App {
 
     // Handling clicks on map:
     this.#map.on("click", this._showForm.bind(this));
+
+    this.#workouts.forEach((w) => {
+      this._renderWorkoutMarker(w);
+    });
   }
 
   _showForm(mapE) {
@@ -186,6 +191,9 @@ class App {
 
     // Hide form + clear input fields
     this._hideForm();
+
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -259,16 +267,28 @@ class App {
     if (!workoutEl) return; // Guard clause
 
     const workout = this.#workouts.find((w) => w.id === workoutEl.dataset.id);
-    console.log(workout);
+    // console.log(workout);
     this.#map.setView(workout.coords, this.#mapZoomLevel, {
       animate: true,
       pan: {
         duration: 0.5,
       },
     });
+  }
 
-    // Using the public interface
-    workout.click();
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workouts"));
+    // console.log(data);
+
+    if (!data) return;
+    this.#workouts = data;
+    this.#workouts.forEach((w) => {
+      this._renderWorkout(w);
+    });
   }
 }
 
