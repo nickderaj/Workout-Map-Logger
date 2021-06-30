@@ -11,8 +11,7 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
-let map;
-let mapEvent;
+let map, mapEvent;
 
 if (navigator.geolocation) {
   // Guard clause for old browsers
@@ -43,7 +42,16 @@ if (navigator.geolocation) {
   );
 }
 
-form.addEventListener("submit", function () {
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  // Clear input fields
+  inputDistance.value =
+    inputDuration.value =
+    inputCadence.value =
+    inputElevation.value =
+      "";
+
+  // Display Marker
   const { lat, lng } = mapEvent.latlng;
   L.marker([lat, lng])
     .addTo(map)
@@ -59,6 +67,29 @@ form.addEventListener("submit", function () {
     .setPopupContent("Workout")
     .openPopup();
 });
+
+// Toggle between running & cycling:
+inputType.addEventListener("change", function () {
+  inputElevation.closest(".form__row").classList.toggle("form__row--hidden");
+  inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
+});
+
+{
+  /* <div class="form__row">
+<label class="form__label">Cadence</label>
+<input
+  class="form__input form__input--cadence"
+  placeholder="step/min"
+/>
+</div>
+<div class="form__row form__row--hidden">
+<label class="form__label">Elev Gain</label>
+<input
+  class="form__input form__input--elevation"
+  placeholder="meters"
+/>
+</div> */
+}
 ////////////////////////////////////////////////////////////////
 
 // Planning:
