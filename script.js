@@ -49,10 +49,6 @@ class Cycling extends Workout {
   }
 }
 
-const run1 = new Running();
-const cycle1 = new Cycling();
-console.log(run1, cycle1);
-
 class App {
   #map;
   #mapEvent;
@@ -106,14 +102,17 @@ class App {
 
   _newWorkout(e) {
     e.preventDefault();
-    // Clear input fields
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        "";
+    // Get data from form
 
-    // Display Marker
+    // Check if data is valid
+
+    // If running, create running object
+
+    // If cycling, create cycling object
+
+    // Add new object to workout array
+
+    // Render workout on map as marker
     const { lat, lng } = this.#mapEvent.latlng;
     L.marker([lat, lng])
       .addTo(this.#map)
@@ -128,6 +127,17 @@ class App {
       )
       .setPopupContent("Workout")
       .openPopup();
+
+    // Render workout on list
+
+    // Hide form + clear input fields
+
+    // Clear input fields
+    inputDistance.value =
+      inputDuration.value =
+      inputCadence.value =
+      inputElevation.value =
+        "";
   }
 }
 const app = new App();
