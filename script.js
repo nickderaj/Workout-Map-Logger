@@ -11,6 +11,21 @@ const inputDuration = document.querySelector(".form__input--duration");
 const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
+if (navigator.geolocation) {
+  // Guard clause for old browsers
+  navigator.geolocation.getCurrentPosition(
+    function (position) {
+      const { latitude } = position.coords; // could write position.coords.latitude but this makes use of destructuring
+      const { longitude } = position.coords;
+      console.log(`https://www.google.com.my/maps/@${latitude},${longitude}`);
+    },
+    function () {
+      alert("Could not get your position");
+    }
+  );
+}
+////////////////////////////////////////////////////////////////
+
 // Planning:
 
 // 1. User Stories: description of apps functionality from the user's perspective
